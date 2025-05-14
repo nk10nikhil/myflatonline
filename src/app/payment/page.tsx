@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import Navbar from '@/components/Navbar';
@@ -15,7 +15,8 @@ declare global {
   }
 }
 
-const PaymentPage = () => {
+// Client component using useSearchParams
+function PaymentContent() {
   const { user } = useAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -36,7 +37,7 @@ const PaymentPage = () => {
     const planParam = searchParams.get('plan');
     if (planParam && Object.values(UserRole).includes(planParam as UserRole)) {
       setPlan(planParam as UserRole);
-      
+
       // Set amount based on plan
       switch (planParam) {
         case UserRole.BROKER:
@@ -63,7 +64,9 @@ const PaymentPage = () => {
 
     return () => {
       // Clean up script
-      document.body.removeChild(script);
+      if (script.parentNode) {
+        document.body.removeChild(script);
+      }
     };
   }, [searchParams, router, user]);
 
@@ -135,94 +138,97 @@ const PaymentPage = () => {
 
   if (!plan || !user) {
     return (
-      <div className="min-h-screen flex flex-col">
-        <Navbar />
-        <div className="flex-grow flex items-center justify-center bg-gray-50 dark:bg-gray-800">
-          <div className="text-center">
-            <p className="text-gray-600 dark:text-gray-300">Loading...</p>
-          </div>
+      <div className="flex-grow flex items-center justify-center bg-gray-50 dark:bg-gray-800">
+        <div className="text-center">
+          <p className="text-gray-600 dark:text-gray-300">Loading...</p>
         </div>
-        <Footer />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <Navbar />
-
-      <div className="flex-grow bg-gray-50 dark:bg-gray-800 py-12 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-lg mx-auto bg-white dark:bg-gray-700 rounded-lg shadow-md overflow-hidden">
-          {success ? (
-            <div className="p-8 text-center">
-              <FiCheckCircle className="h-16 w-16 text-green-500 mx-auto mb-4" />
-              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Payment Successful!</h2>
+    <div className="flex-grow bg-gray-50 dark:bg-gray-800 py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-lg mx-auto bg-white dark:bg-gray-700 rounded-lg shadow-md overflow-hidden">
+        {success ? (
+          <div className="p-8 text-center">
+            <FiCheckCircle className="h-16 w-16 text-green-500 mx-auto mb-4" />
+            <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">Payment Successful!</h2>
+            <p className="text-gray-600 dark:text-gray-300 mb-6">
+              Your subscription has been activated. You will be redirected to your dashboard shortly.
+            </p>
+            <button
+              onClick={() => router.push('/dashboard')}
+              className="bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+            >
+              Go to Dashboard
+            </button>
+          </div>
+        ) : (
+          <>
+            <div className="p-8">
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Complete Your Subscription</h2>
               <p className="text-gray-600 dark:text-gray-300 mb-6">
-                Your subscription has been activated. You will be redirected to your dashboard shortly.
+                You're subscribing to the {plan} plan for ₹{amount}/month.
               </p>
-              <button
-                onClick={() => router.push('/dashboard')}
-                className="bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
-              >
-                Go to Dashboard
-              </button>
-            </div>
-          ) : (
-            <>
-              <div className="p-8">
-                <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Complete Your Subscription</h2>
-                <p className="text-gray-600 dark:text-gray-300 mb-6">
-                  You're subscribing to the {plan} plan for ₹{amount}/month.
-                </p>
 
-                {error && (
-                  <div className="bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded-md p-4 text-red-600 dark:text-red-300 flex items-start mb-6">
-                    <FiAlertCircle className="h-5 w-5 mr-3 mt-0.5" />
-                    <span>{error}</span>
+              {error && (
+                <div className="bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 rounded-md p-4 text-red-600 dark:text-red-300 flex items-start mb-6">
+                  <FiAlertCircle className="h-5 w-5 mr-3 mt-0.5" />
+                  <span>{error}</span>
+                </div>
+              )}
+
+              <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-md mb-6">
+                <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">Subscription Details</h3>
+                <div className="space-y-2">
+                  <div className="flex justify-between">
+                    <span className="text-gray-600 dark:text-gray-300">Plan:</span>
+                    <span className="font-medium text-gray-900 dark:text-white">{plan}</span>
                   </div>
-                )}
-
-                <div className="bg-gray-50 dark:bg-gray-800 p-4 rounded-md mb-6">
-                  <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">Subscription Details</h3>
-                  <div className="space-y-2">
-                    <div className="flex justify-between">
-                      <span className="text-gray-600 dark:text-gray-300">Plan:</span>
-                      <span className="font-medium text-gray-900 dark:text-white">{plan}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-600 dark:text-gray-300">Amount:</span>
-                      <span className="font-medium text-gray-900 dark:text-white">₹{amount}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-gray-600 dark:text-gray-300">Duration:</span>
-                      <span className="font-medium text-gray-900 dark:text-white">30 days</span>
-                    </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600 dark:text-gray-300">Amount:</span>
+                    <span className="font-medium text-gray-900 dark:text-white">₹{amount}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600 dark:text-gray-300">Duration:</span>
+                    <span className="font-medium text-gray-900 dark:text-white">30 days</span>
                   </div>
                 </div>
-
-                <button
-                  onClick={handlePayment}
-                  disabled={loading}
-                  className="w-full bg-blue-600 text-white py-3 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  {loading ? 'Processing...' : 'Pay Now'}
-                </button>
-
-                <p className="mt-4 text-sm text-gray-500 dark:text-gray-400 text-center">
-                  By clicking "Pay Now", you agree to our Terms of Service and Privacy Policy.
-                </p>
               </div>
 
-              <div className="bg-gray-50 dark:bg-gray-800 px-8 py-4 border-t border-gray-200 dark:border-gray-600">
-                <p className="text-sm text-gray-500 dark:text-gray-400">
-                  Secured by Razorpay. We do not store your payment information.
-                </p>
-              </div>
-            </>
-          )}
-        </div>
+              <button
+                onClick={handlePayment}
+                disabled={loading}
+                className="w-full bg-blue-600 text-white py-3 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {loading ? 'Processing...' : 'Pay Now'}
+              </button>
+
+              <p className="mt-4 text-sm text-gray-500 dark:text-gray-400 text-center">
+                By clicking "Pay Now", you agree to our Terms of Service and Privacy Policy.
+              </p>
+            </div>
+
+            <div className="bg-gray-50 dark:bg-gray-800 px-8 py-4 border-t border-gray-200 dark:border-gray-600">
+              <p className="text-sm text-gray-500 dark:text-gray-400">
+                Secured by Razorpay. We do not store your payment information.
+              </p>
+            </div>
+          </>
+        )}
       </div>
+    </div>
+  );
+}
 
+// Main component with Suspense
+const PaymentPage = () => {
+  return (
+    <div className="min-h-screen flex flex-col">
+      <Navbar />
+      <Suspense fallback={<div className="flex-grow flex justify-center items-center">Loading payment details...</div>}>
+        <PaymentContent />
+      </Suspense>
       <Footer />
     </div>
   );

@@ -7,28 +7,28 @@ import { roleMiddleware } from '@/lib/auth';
 // Get a single flat by ID (admin only)
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: { id: string } }
 ) {
   try {
     // Check if user is admin
     const adminCheck = await roleMiddleware([UserRole.ADMIN])(req);
-    
+
     if (adminCheck instanceof NextResponse) {
       return adminCheck;
     }
-    
+
     await connectDB();
-    
-    const flat = await Flat.findById(params.id)
+
+    const flat = await Flat.findById(context.params.id)
       .populate('createdBy', 'name email role phone');
-    
+
     if (!flat) {
       return NextResponse.json(
         { success: false, message: 'Flat not found' },
         { status: 404 }
       );
     }
-    
+
     return NextResponse.json({ success: true, flat });
   } catch (error) {
     console.error('Error fetching flat:', error);
@@ -42,48 +42,48 @@ export async function GET(
 // Update a flat (admin only)
 export async function PUT(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: { id: string } }
 ) {
   try {
     // Check if user is admin
     const adminCheck = await roleMiddleware([UserRole.ADMIN])(req);
-    
+
     if (adminCheck instanceof NextResponse) {
       return adminCheck;
     }
-    
+
     await connectDB();
-    
+
     // Find flat
-    const flat = await Flat.findById(params.id);
-    
+    const flat = await Flat.findById(context.params.id);
+
     if (!flat) {
       return NextResponse.json(
         { success: false, message: 'Flat not found' },
         { status: 404 }
       );
     }
-    
+
     // Update flat
     const flatData = await req.json();
-    
+
     const updatedFlat = await Flat.findByIdAndUpdate(
-      params.id,
+      context.params.id,
       flatData,
       { new: true, runValidators: true }
     ).populate('createdBy', 'name email role phone');
-    
+
     return NextResponse.json({ success: true, flat: updatedFlat });
   } catch (error) {
     console.error('Error updating flat:', error);
-    
+
     if (error instanceof Error) {
       return NextResponse.json(
         { success: false, message: error.message },
         { status: 400 }
       );
     }
-    
+
     return NextResponse.json(
       { success: false, message: 'Something went wrong' },
       { status: 500 }
@@ -94,31 +94,31 @@ export async function PUT(
 // Delete a flat (admin only)
 export async function DELETE(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: { id: string } }
 ) {
   try {
     // Check if user is admin
     const adminCheck = await roleMiddleware([UserRole.ADMIN])(req);
-    
+
     if (adminCheck instanceof NextResponse) {
       return adminCheck;
     }
-    
+
     await connectDB();
-    
+
     // Find flat
-    const flat = await Flat.findById(params.id);
-    
+    const flat = await Flat.findById(context.params.id);
+
     if (!flat) {
       return NextResponse.json(
         { success: false, message: 'Flat not found' },
         { status: 404 }
       );
     }
-    
+
     // Delete flat
-    await Flat.findByIdAndDelete(params.id);
-    
+    await Flat.findByIdAndDelete(context.params.id);
+
     return NextResponse.json({
       success: true,
       message: 'Flat deleted successfully',
@@ -135,41 +135,41 @@ export async function DELETE(
 // Patch a flat (for status updates) (admin only)
 export async function PATCH(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: { id: string } }
 ) {
   try {
     // Check if user is admin
     const adminCheck = await roleMiddleware([UserRole.ADMIN])(req);
-    
+
     if (adminCheck instanceof NextResponse) {
       return adminCheck;
     }
-    
+
     await connectDB();
-    
+
     // Find flat
-    const flat = await Flat.findById(params.id);
-    
+    const flat = await Flat.findById(context.params.id);
+
     if (!flat) {
       return NextResponse.json(
         { success: false, message: 'Flat not found' },
         { status: 404 }
       );
     }
-    
+
     // Update flat status
     const { isActive } = await req.json();
-    
+
     if (typeof isActive !== 'boolean') {
       return NextResponse.json(
         { success: false, message: 'Invalid status value' },
         { status: 400 }
       );
     }
-    
+
     flat.isActive = isActive;
     await flat.save();
-    
+
     return NextResponse.json({
       success: true,
       flat,
