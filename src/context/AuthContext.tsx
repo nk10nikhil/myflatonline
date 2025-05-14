@@ -57,12 +57,18 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     try {
       setLoading(true);
       setError(null);
-      
+
       const { data } = await axios.post('/api/auth/login', { email, password });
-      
+
       if (data.success) {
         setUser(data.user);
-        router.push('/dashboard');
+
+        // Redirect based on user role
+        if (data.user.role === UserRole.ADMIN) {
+          router.push('/admin');
+        } else {
+          router.push('/dashboard');
+        }
       }
     } catch (error: any) {
       setError(error.response?.data?.message || 'Login failed');
@@ -76,9 +82,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     try {
       setLoading(true);
       setError(null);
-      
+
       const { data } = await axios.post('/api/auth/register', { name, email, password, role, phone });
-      
+
       if (data.success) {
         setUser(data.user);
         router.push('/pricing');
@@ -94,11 +100,18 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const logout = async () => {
     try {
       setLoading(true);
-      
+
       await axios.post('/api/auth/logout');
-      
+
+      // Clear user state
       setUser(null);
-      router.push('/');
+
+      // Redirect based on current path
+      if (window.location.pathname.startsWith('/admin')) {
+        router.push('/login');
+      } else {
+        router.push('/');
+      }
     } catch (error: any) {
       setError(error.response?.data?.message || 'Logout failed');
     } finally {
@@ -111,9 +124,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     try {
       setLoading(true);
       setError(null);
-      
+
       const response = await axios.put('/api/user/profile', data);
-      
+
       if (response.data.success) {
         setUser(response.data.user);
       }

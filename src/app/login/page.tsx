@@ -1,19 +1,31 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import { FiMail, FiLock, FiAlertCircle } from 'react-icons/fi';
+import { UserRole } from '@/models/User';
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [formError, setFormError] = useState('');
-  const { login, loading, error } = useAuth();
+  const { user, login, loading, error } = useAuth();
   const router = useRouter();
+
+  useEffect(() => {
+    // If user is already logged in, redirect to appropriate dashboard
+    if (user) {
+      if (user.role === UserRole.ADMIN) {
+        router.push('/admin');
+      } else {
+        router.push('/dashboard');
+      }
+    }
+  }, [user, router]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -27,6 +39,7 @@ const LoginPage = () => {
 
     try {
       await login(email, password);
+      // Redirect will happen in the useEffect hook
     } catch (error) {
       console.error('Login error:', error);
     }
@@ -139,6 +152,17 @@ const LoginPage = () => {
               </button>
             </div>
           </form>
+
+          {/* Demo Credentials */}
+          <div className="mt-6 border-t border-gray-200 dark:border-gray-600 pt-4">
+            <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Demo Credentials</h3>
+            <div className="text-xs text-gray-500 dark:text-gray-400 space-y-1">
+              <p><strong>Admin:</strong> admin@myflat.com / admin123</p>
+              <p><strong>Broker:</strong> broker@example.com / password123</p>
+              <p><strong>Owner:</strong> owner@example.com / password123</p>
+              <p><strong>Tenant:</strong> tenant@example.com / password123</p>
+            </div>
+          </div>
         </div>
       </div>
 

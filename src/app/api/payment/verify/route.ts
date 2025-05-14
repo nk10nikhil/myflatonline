@@ -8,13 +8,13 @@ import { verifyPayment, calculateSubscriptionEndDate } from '@/lib/razorpay';
 export async function POST(req: NextRequest) {
   try {
     const auth = await authMiddleware(req);
-    
+
     if (auth instanceof NextResponse) {
       return auth;
     }
-    
+
     await connectDB();
-    
+
     const {
       razorpayPaymentId,
       razorpayOrderId,
@@ -22,7 +22,7 @@ export async function POST(req: NextRequest) {
       subscriptionType,
       amount,
     } = await req.json();
-    
+
     // Validate input
     if (!razorpayPaymentId || !razorpayOrderId || !razorpaySignature || !subscriptionType || !amount) {
       return NextResponse.json(
@@ -30,21 +30,21 @@ export async function POST(req: NextRequest) {
         { status: 400 }
       );
     }
-    
+
     // Verify payment
     const isValid = verifyPayment(razorpayOrderId, razorpayPaymentId, razorpaySignature);
-    
+
     if (!isValid) {
       return NextResponse.json(
         { success: false, message: 'Invalid payment signature' },
         { status: 400 }
       );
     }
-    
+
     // Calculate subscription dates
     const subscriptionStartDate = new Date();
     const subscriptionEndDate = calculateSubscriptionEndDate(subscriptionStartDate);
-    
+
     // Create payment record
     const payment = await Payment.create({
       user: auth.userId,
@@ -57,7 +57,7 @@ export async function POST(req: NextRequest) {
       subscriptionStartDate,
       subscriptionEndDate,
     });
-    
+
     // Update user subscription status
     const user = await User.findByIdAndUpdate(
       auth.userId,
@@ -67,7 +67,7 @@ export async function POST(req: NextRequest) {
       },
       { new: true }
     );
-    
+
     return NextResponse.json({
       success: true,
       payment,

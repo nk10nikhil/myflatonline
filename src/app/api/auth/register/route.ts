@@ -48,10 +48,7 @@ export async function POST(req: NextRequest) {
     // Create token
     const token = createToken(user);
     
-    // Set token cookie
-    setTokenCookie(token);
-    
-    return NextResponse.json(
+    const response = NextResponse.json(
       {
         success: true,
         user: {
@@ -65,6 +62,10 @@ export async function POST(req: NextRequest) {
       },
       { status: 201 }
     );
+    setTokenCookie(token, response);
+
+    return response;
+    
   } catch (error) {
     console.error('Error registering user:', error);
     return NextResponse.json(

@@ -85,7 +85,7 @@ UserSchema.methods.comparePassword = async function (candidatePassword: string):
   return await bcrypt.compare(candidatePassword, this.password);
 };
 
-// Prevent mongoose from creating a new model if it already exists
-const User: Model<IUser> = mongoose.models?.User || mongoose.model<IUser>('User', UserSchema);
+// In your User.ts model, ensure you have the same pattern:
+const User: Model<IUser> = (mongoose.models?.User as Model<IUser>) || mongoose.model<IUser>('User', UserSchema);
 
 export default User;
