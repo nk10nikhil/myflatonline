@@ -7,11 +7,10 @@ import { useParams } from 'next/navigation';
 import axios from 'axios';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
-import { 
-  FiMapPin, 
-  FiBed, 
-  FiHome, 
-  FiDollarSign, 
+import {
+  FiMapPin,
+  FiHome,
+  FiDollarSign,
   FiCalendar,
   FiUser,
   FiPhone,
@@ -22,6 +21,7 @@ import {
   FiChevronLeft,
   FiChevronRight
 } from 'react-icons/fi';
+import { BiBed } from 'react-icons/bi';
 
 const FlatDetailsPage = () => {
   const { id } = useParams();
@@ -35,7 +35,7 @@ const FlatDetailsPage = () => {
       try {
         setLoading(true);
         const { data } = await axios.get(`/api/flats/${id}`);
-        
+
         if (data.success) {
           setFlat(data.flat);
         }
@@ -54,7 +54,7 @@ const FlatDetailsPage = () => {
 
   const nextImage = () => {
     if (flat && flat.images.length > 0) {
-      setCurrentImageIndex((prevIndex) => 
+      setCurrentImageIndex((prevIndex) =>
         prevIndex === flat.images.length - 1 ? 0 : prevIndex + 1
       );
     }
@@ -62,7 +62,7 @@ const FlatDetailsPage = () => {
 
   const prevImage = () => {
     if (flat && flat.images.length > 0) {
-      setCurrentImageIndex((prevIndex) => 
+      setCurrentImageIndex((prevIndex) =>
         prevIndex === 0 ? flat.images.length - 1 : prevIndex - 1
       );
     }
@@ -131,7 +131,7 @@ const FlatDetailsPage = () => {
                     fill
                     className="object-cover"
                   />
-                  
+
                   {flat.images.length > 1 && (
                     <>
                       <button
@@ -146,15 +146,14 @@ const FlatDetailsPage = () => {
                       >
                         <FiChevronRight className="h-6 w-6" />
                       </button>
-                      
+
                       <div className="absolute bottom-4 left-1/2 transform -translate-x-1/2 flex space-x-2">
                         {flat.images.map((_, index: number) => (
                           <button
                             key={index}
                             onClick={() => setCurrentImageIndex(index)}
-                            className={`h-2 w-2 rounded-full ${
-                              currentImageIndex === index ? 'bg-white' : 'bg-gray-400'
-                            }`}
+                            className={`h-2 w-2 rounded-full ${currentImageIndex === index ? 'bg-white' : 'bg-gray-400'
+                              }`}
                           />
                         ))}
                       </div>
@@ -197,7 +196,7 @@ const FlatDetailsPage = () => {
                 <div className="bg-gray-50 dark:bg-gray-800 p-3 rounded-md">
                   <div className="text-sm text-gray-500 dark:text-gray-400">Type</div>
                   <div className="font-medium text-gray-900 dark:text-white flex items-center">
-                    <FiBed className="mr-1" /> {flat.bhkType}
+                    <BiBed className="mr-1" /> {flat.bhkType}
                   </div>
                 </div>
                 <div className="bg-gray-50 dark:bg-gray-800 p-3 rounded-md">
