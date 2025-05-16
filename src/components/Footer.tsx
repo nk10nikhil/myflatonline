@@ -6,106 +6,124 @@ import { FiHome, FiMail, FiPhone, FiFacebook, FiTwitter, FiInstagram, FiLinkedin
 
 const Footer = () => {
   return (
-    <footer className="bg-gray-100 dark:bg-gray-900 pt-10 pb-6">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-          <div>
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">MyFlat</h3>
-            <p className="text-gray-600 dark:text-gray-300 mb-4">
-              Find your perfect flat with MyFlat - A platform for brokers, owners, and tenants.
+    <footer className="bg-slate-50 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-700 transition-colors duration-300">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
+          {/* About MyFlat */}
+          <div className="mb-8 md:mb-0">
+            <div className="flex items-center mb-4">
+              <svg className="h-8 w-auto text-sky-600 dark:text-sky-400 mr-2" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
+              </svg>
+              <h3 className="text-xl font-semibold text-slate-800 dark:text-white">
+                MyFlat
+              </h3>
+            </div>
+            <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed mb-6">
+              Your trusted partner in finding the perfect flat. We connect brokers, owners, and tenants seamlessly.
             </p>
             <div className="flex space-x-4">
-              <a href="#" className="text-gray-500 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400">
-                <FiFacebook className="h-5 w-5" />
-              </a>
-              <a href="#" className="text-gray-500 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400">
-                <FiTwitter className="h-5 w-5" />
-              </a>
-              <a href="#" className="text-gray-500 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400">
-                <FiInstagram className="h-5 w-5" />
-              </a>
-              <a href="#" className="text-gray-500 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400">
-                <FiLinkedin className="h-5 w-5" />
-              </a>
+              {[
+                { href: "#", icon: FiFacebook, label: "Facebook" },
+                { href: "#", icon: FiTwitter, label: "Twitter" },
+                { href: "#", icon: FiInstagram, label: "Instagram" },
+                { href: "#", icon: FiLinkedin, label: "LinkedIn" },
+              ].map((social) => (
+                <a
+                  key={social.label}
+                  href={social.href}
+                  aria-label={social.label}
+                  className="text-slate-500 hover:text-sky-600 dark:text-slate-400 dark:hover:text-sky-400 transition-colors duration-300"
+                >
+                  <social.icon className="h-6 w-6" />
+                </a>
+              ))}
             </div>
           </div>
-          
-          <div>
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Quick Links</h3>
-            <ul className="space-y-2">
-              <li>
-                <Link href="/" className="text-gray-600 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400">
-                  Home
-                </Link>
-              </li>
-              <li>
-                <Link href="/flats" className="text-gray-600 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400">
-                  Flats
-                </Link>
-              </li>
-              <li>
-                <Link href="/pricing" className="text-gray-600 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400">
-                  Pricing
-                </Link>
-              </li>
-              <li>
-                <Link href="/about" className="text-gray-600 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400">
-                  About Us
-                </Link>
-              </li>
-              <li>
-                <Link href="/contact" className="text-gray-600 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400">
-                  Contact Us
-                </Link>
-              </li>
+
+          {/* Quick Links */}
+          <div className="mb-8 md:mb-0">
+            <h3 className="text-lg font-semibold text-slate-800 dark:text-white mb-5">
+              Quick Links
+            </h3>
+            <ul className="space-y-3">
+              {[
+                { href: "/", label: "Home" },
+                { href: "/flats", label: "Browse Flats" },
+                // { href: "/pricing", label: "Pricing Plans" },
+                { href: "/about", label: "About Our Mission" },
+                { href: "/contact", label: "Get In Touch" },
+              ].map((link) => (
+                <li key={link.label}>
+                  <Link
+                    href={link.href}
+                    className="text-slate-600 hover:text-sky-600 dark:text-slate-400 dark:hover:text-sky-400 transition-colors duration-300 text-sm hover:underline"
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
-          
-          <div>
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Legal</h3>
-            <ul className="space-y-2">
-              <li>
-                <Link href="/terms" className="text-gray-600 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400">
-                  Terms & Conditions
-                </Link>
-              </li>
-              <li>
-                <Link href="/privacy" className="text-gray-600 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400">
-                  Privacy Policy
-                </Link>
-              </li>
-              <li>
-                <Link href="/faq" className="text-gray-600 hover:text-blue-600 dark:text-gray-300 dark:hover:text-blue-400">
-                  FAQs
-                </Link>
-              </li>
+
+          {/* Legal & Support */}
+          <div className="mb-8 md:mb-0">
+            <h3 className="text-lg font-semibold text-slate-800 dark:text-white mb-5">
+              Legal & Support
+            </h3>
+            <ul className="space-y-3">
+              {[
+                { href: "/terms", label: "Terms of Service" },
+                { href: "/privacy", label: "Privacy Policy" },
+                { href: "/faq", label: "Frequently Asked Questions" },
+                { href: "/sitemap", label: "Sitemap" }, // Example new page
+              ].map((link) => (
+                <li key={link.label}>
+                  <Link
+                    href={link.href}
+                    className="text-slate-600 hover:text-sky-600 dark:text-slate-400 dark:hover:text-sky-400 transition-colors duration-300 text-sm hover:underline"
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
-          
+
+          {/* Contact Us */}
           <div>
-            <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Contact Us</h3>
-            <ul className="space-y-2">
+            <h3 className="text-lg font-semibold text-slate-800 dark:text-white mb-5">
+              Contact Information
+            </h3>
+            <ul className="space-y-4 text-sm">
               <li className="flex items-start">
-                <FiHome className="h-5 w-5 text-gray-500 dark:text-gray-400 mr-2 mt-0.5" />
-                <span className="text-gray-600 dark:text-gray-300">
-                  123 Main Street, Bangalore, Karnataka, India
+                <FiHome className="h-5 w-5 text-sky-600 dark:text-sky-400 mr-3 mt-0.5 flex-shrink-0" />
+                <span className="text-slate-600 dark:text-slate-400">
+                  123 Main Street, Innovation Tower, Bangalore, KA 560001, India
                 </span>
               </li>
               <li className="flex items-center">
-                <FiPhone className="h-5 w-5 text-gray-500 dark:text-gray-400 mr-2" />
-                <span className="text-gray-600 dark:text-gray-300">+91 9876543210</span>
+                <FiPhone className="h-5 w-5 text-sky-600 dark:text-sky-400 mr-3 flex-shrink-0" />
+                <a href="tel:+919876543210" className="text-slate-600 hover:text-sky-600 dark:text-slate-400 dark:hover:text-sky-400 transition-colors duration-300">
+                  +91 98765 43210
+                </a>
               </li>
               <li className="flex items-center">
-                <FiMail className="h-5 w-5 text-gray-500 dark:text-gray-400 mr-2" />
-                <span className="text-gray-600 dark:text-gray-300">info@myflat.com</span>
+                <FiMail className="h-5 w-5 text-sky-600 dark:text-sky-400 mr-3 flex-shrink-0" />
+                <a href="mailto:info@myflat.com" className="text-slate-600 hover:text-sky-600 dark:text-slate-400 dark:hover:text-sky-400 transition-colors duration-300">
+                  info@myflat.com
+                </a>
               </li>
             </ul>
+            <p className="text-xs text-slate-500 dark:text-slate-500 mt-6">
+              Office Hours: Mon - Fri, 9 AM - 6 PM IST
+            </p>
           </div>
         </div>
-        
-        <div className="border-t border-gray-200 dark:border-gray-700 mt-8 pt-6">
-          <p className="text-center text-gray-500 dark:text-gray-400">
-            &copy; {new Date().getFullYear()} MyFlat. All rights reserved.
+
+        <div className="border-t border-slate-200 dark:border-slate-700 mt-10 pt-8">
+          <p className="text-center text-sm text-slate-500 dark:text-slate-400">
+            &copy; {new Date().getFullYear()} MyFlat. All rights reserved. Built with ❤️ in India.
           </p>
         </div>
       </div>

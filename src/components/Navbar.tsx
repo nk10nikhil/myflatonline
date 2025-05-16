@@ -1,11 +1,11 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
-import { FiMenu, FiX, FiUser, FiLogOut, FiHome, FiSettings, FiMoon, FiSun } from 'react-icons/fi';
+import { FiMenu, FiX, FiUser, FiLogOut, FiHome, FiSettings } from 'react-icons/fi';
 import { UserRole } from '@/models/User';
 
 const Navbar = () => {
@@ -13,21 +13,6 @@ const Navbar = () => {
   const pathname = usePathname();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
-  const [isDarkMode, setIsDarkMode] = useState(false);
-
-  useEffect(() => {
-    // Check if dark mode is enabled
-    if (typeof window !== 'undefined') {
-      const isDark = localStorage.getItem('darkMode') === 'true';
-      setIsDarkMode(isDark);
-
-      if (isDark) {
-        document.documentElement.classList.add('dark');
-      } else {
-        document.documentElement.classList.remove('dark');
-      }
-    }
-  }, []);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -37,277 +22,249 @@ const Navbar = () => {
     setIsProfileMenuOpen(!isProfileMenuOpen);
   };
 
-  const toggleDarkMode = () => {
-    const newDarkMode = !isDarkMode;
-    setIsDarkMode(newDarkMode);
-
-    if (typeof window !== 'undefined') {
-      localStorage.setItem('darkMode', newDarkMode.toString());
-
-      if (newDarkMode) {
-        document.documentElement.classList.add('dark');
-      } else {
-        document.documentElement.classList.remove('dark');
-      }
-    }
-  };
-
   return (
-    <nav className="bg-white shadow-md dark:bg-gray-900">
+    <nav className="bg-white dark:bg-slate-800 shadow-lg sticky top-0 z-40 transition-colors duration-300">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-16">
-          <div className="flex">
-            <div className="flex-shrink-0 flex items-center">
-              <Link href="/" className="text-2xl font-bold text-blue-600 dark:text-blue-400">
+        <div className="flex justify-between h-20 items-center">
+          <div className="flex items-center">
+            <Link href="/" className="flex-shrink-0 flex items-center">
+              <svg className="h-10 w-auto text-sky-600 dark:text-sky-400" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
+              </svg>
+              <span className="ml-3 text-2xl font-bold text-slate-800 dark:text-white">
                 MyFlat
-              </Link>
-            </div>
-            <div className="hidden sm:ml-6 sm:flex sm:space-x-8">
-              <Link
-                href="/"
-                className="border-transparent text-gray-500 hover:border-blue-500 hover:text-blue-600 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
-              >
-                Home
-              </Link>
-              <Link
-                href="/flats"
-                className="border-transparent text-gray-500 hover:border-blue-500 hover:text-blue-600 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
-              >
-                Flats
-              </Link>
-              {/* <Link
-                href="/pricing"
-                className="border-transparent text-gray-500 hover:border-blue-500 hover:text-blue-600 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
-              >
-                Pricing
-              </Link> */}
-              <Link
-                href="/about"
-                className="border-transparent text-gray-500 hover:border-blue-500 hover:text-blue-600 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
-              >
-                About
-              </Link>
-              <Link
-                href="/contact"
-                className="border-transparent text-gray-500 hover:border-blue-500 hover:text-blue-600 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
-              >
-                Contact
-              </Link>
-            </div>
+              </span>
+            </Link>
           </div>
-          <div className="hidden sm:ml-6 sm:flex sm:items-center">
-            {/* Dark mode toggle */}
-            <button
-              type="button"
-              onClick={toggleDarkMode}
-              className="p-2 rounded-full text-gray-500 hover:text-blue-600 focus:outline-none"
-              aria-label="Toggle dark mode"
-            >
-              {isDarkMode ? <FiSun className="h-5 w-5" /> : <FiMoon className="h-5 w-5" />}
-            </button>
 
+          <div className="hidden sm:ml-6 sm:flex sm:space-x-2 items-center">
+            {[
+              { href: "/", label: "Home" },
+              { href: "/flats", label: "Flats" },
+              { href: "/about", label: "About Us" },
+              { href: "/contact", label: "Contact" },
+            ].map((item) => (
+              <Link
+                key={item.label}
+                href={item.href}
+                className={`px-4 py-2 rounded-md text-sm font-medium transition-colors duration-300 ${pathname === item.href
+                  ? "bg-sky-100 dark:bg-sky-700 text-sky-700 dark:text-sky-300 font-semibold"
+                  : "text-slate-600 dark:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-700 hover:text-slate-900 dark:hover:text-white"
+                  }`}
+              >
+                {item.label}
+              </Link>
+            ))}
+          </div>
+
+          <div className="flex items-center">
             {user ? (
-              <div className="ml-3 relative">
+              <div className="ml-4 relative">
                 <div>
                   <button
                     type="button"
                     onClick={toggleProfileMenu}
-                    className="flex text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                    className="flex text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 dark:focus:ring-offset-slate-800 focus:ring-sky-500"
+                    {...(isProfileMenuOpen && { "aria-expanded": "true" })} // Conditionally add attribute
+                    aria-haspopup="true"
                   >
+                    <span className="sr-only">Open user menu</span>
                     {user.profilePicture ? (
                       <Image
-                        className="h-8 w-8 rounded-full"
+                        className="h-10 w-10 rounded-full object-cover"
                         src={user.profilePicture}
                         alt={user.name}
-                        width={32}
-                        height={32}
+                        width={40}
+                        height={40}
                       />
                     ) : (
-                      <div className="h-8 w-8 rounded-full bg-blue-500 flex items-center justify-center text-white">
+                      <div className="h-10 w-10 rounded-full bg-sky-500 dark:bg-sky-600 flex items-center justify-center text-white font-semibold text-lg">
                         {user.name.charAt(0).toUpperCase()}
                       </div>
                     )}
                   </button>
                 </div>
                 {isProfileMenuOpen && (
-                  <div className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white dark:bg-gray-800 ring-1 ring-black ring-opacity-5 focus:outline-none z-10">
-                    <div className="px-4 py-2 text-sm text-gray-700 dark:text-gray-200 border-b border-gray-200 dark:border-gray-700">
-                      <p className="font-medium">{user.name}</p>
-                      <p className="text-xs text-gray-500 dark:text-gray-400">{user.email}</p>
+                  <div className="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-xl bg-white dark:bg-slate-800 ring-1 ring-black ring-opacity-5 focus:outline-none z-20">
+                    <div className="py-1">
+                      <div className="px-4 py-3 border-b border-gray-200 dark:border-slate-700">
+                        <p className="text-sm font-medium text-slate-900 dark:text-white truncate">
+                          Signed in as
+                        </p>
+                        <p className="text-sm font-semibold text-slate-800 dark:text-slate-200 truncate">
+                          {user.name}
+                        </p>
+                        <p className="text-xs text-slate-500 dark:text-slate-400 truncate">
+                          {user.email}
+                        </p>
+                      </div>
+                      {user.role === UserRole.ADMIN ? (
+                        <Link
+                          href="/admin"
+                          className="flex items-center px-4 py-2 text-sm text-slate-700 dark:text-slate-200 hover:bg-gray-100 dark:hover:bg-slate-700 w-full text-left"
+                          onClick={() => setIsProfileMenuOpen(false)}
+                        >
+                          <FiSettings className="mr-3 h-5 w-5" /> Admin Dashboard
+                        </Link>
+                      ) : (
+                        <Link
+                          href="/dashboard"
+                          className="flex items-center px-4 py-2 text-sm text-slate-700 dark:text-slate-200 hover:bg-gray-100 dark:hover:bg-slate-700 w-full text-left"
+                          onClick={() => setIsProfileMenuOpen(false)}
+                        >
+                          <FiHome className="mr-3 h-5 w-5" /> Dashboard
+                        </Link>
+                      )}
+                      <Link
+                        href="/dashboard/profile"
+                        className="flex items-center px-4 py-2 text-sm text-slate-700 dark:text-slate-200 hover:bg-gray-100 dark:hover:bg-slate-700 w-full text-left"
+                        onClick={() => setIsProfileMenuOpen(false)}
+                      >
+                        <FiUser className="mr-3 h-5 w-5" /> Your Profile
+                      </Link>
+                      <button
+                        type="button"
+                        onClick={() => { logout(); setIsProfileMenuOpen(false); }}
+                        className="flex items-center w-full text-left px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/30"
+                      >
+                        <FiLogOut className="mr-3 h-5 w-5" /> Sign out
+                      </button>
                     </div>
-                    {user.role === UserRole.ADMIN ? (
-                      <Link
-                        href="/admin"
-                        className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
-                      >
-                        Admin Dashboard
-                      </Link>
-                    ) : (
-                      <Link
-                        href="/dashboard"
-                        className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
-                      >
-                        Dashboard
-                      </Link>
-                    )}
-                    <Link
-                      href="/dashboard/profile"
-                      className="block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
-                    >
-                      Profile
-                    </Link>
-                    <button
-                      type="button"
-                      onClick={logout}
-                      className="w-full text-left block px-4 py-2 text-sm text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700"
-                    >
-                      Sign out
-                    </button>
                   </div>
                 )}
               </div>
             ) : (
-              <div className="flex space-x-4">
+              <div className="hidden sm:flex items-center space-x-2 ml-4">
                 <Link
                   href="/login"
-                  className="text-gray-500 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium"
+                  className="px-4 py-2 rounded-md text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-700 hover:text-slate-900 dark:hover:text-white transition-colors duration-300"
                 >
                   Login
                 </Link>
                 <Link
                   href="/register"
-                  className="bg-blue-600 text-white hover:bg-blue-700 px-3 py-2 rounded-md text-sm font-medium"
+                  className="px-4 py-2 rounded-md text-sm font-medium bg-sky-600 text-white hover:bg-sky-700 dark:bg-sky-500 dark:hover:bg-sky-600 transition-colors duration-300 shadow-md hover:shadow-lg"
                 >
                   Register
                 </Link>
               </div>
             )}
-          </div>
-          <div className="-mr-2 flex items-center sm:hidden">
-            {/* Dark mode toggle for mobile */}
-            <button
-              type="button"
-              onClick={toggleDarkMode}
-              className="p-2 rounded-full text-gray-500 hover:text-blue-600 focus:outline-none mr-2"
-              aria-label="Toggle dark mode"
-            >
-              {isDarkMode ? <FiSun className="h-5 w-5" /> : <FiMoon className="h-5 w-5" />}
-            </button>
 
-            <button
-              type="button"
-              onClick={toggleMenu}
-              className="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500"
-            >
-              {isMenuOpen ? (
-                <FiX className="block h-6 w-6" aria-hidden="true" />
-              ) : (
-                <FiMenu className="block h-6 w-6" aria-hidden="true" />
-              )}
-            </button>
+            <div className="-mr-2 flex items-center sm:hidden ml-3">
+              <button
+                type="button"
+                onClick={toggleMenu}
+                className="inline-flex items-center justify-center p-2 rounded-md text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-sky-500"
+                aria-controls="mobile-menu"
+                {...(isMenuOpen && { "aria-expanded": "true" })} // Conditionally add attribute
+              >
+                <span className="sr-only">Open main menu</span>
+                {isMenuOpen ? (
+                  <FiX className="block h-7 w-7" aria-hidden="true" />
+                ) : (
+                  <FiMenu className="block h-7 w-7" aria-hidden="true" />
+                )}
+              </button>
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Mobile menu */}
       {isMenuOpen && (
-        <div className="sm:hidden">
-          <div className="pt-2 pb-3 space-y-1">
-            <Link
-              href="/"
-              className="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-600 hover:bg-gray-50 hover:border-blue-500 hover:text-blue-600"
-            >
-              Home
-            </Link>
-            <Link
-              href="/flats"
-              className="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-600 hover:bg-gray-50 hover:border-blue-500 hover:text-blue-600"
-            >
-              Flats
-            </Link>
-            <Link
-              href="/pricing"
-              className="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-600 hover:bg-gray-50 hover:border-blue-500 hover:text-blue-600"
-            >
-              Pricing
-            </Link>
-            <Link
-              href="/about"
-              className="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-600 hover:bg-gray-50 hover:border-blue-500 hover:text-blue-600"
-            >
-              About
-            </Link>
-            <Link
-              href="/contact"
-              className="block pl-3 pr-4 py-2 border-l-4 border-transparent text-base font-medium text-gray-600 hover:bg-gray-50 hover:border-blue-500 hover:text-blue-600"
-            >
-              Contact
-            </Link>
+        <div className="sm:hidden bg-white dark:bg-slate-800 border-t border-gray-200 dark:border-slate-700" id="mobile-menu">
+          <div className="pt-2 pb-3 space-y-1 px-2">
+            {[
+              { href: "/", label: "Home" },
+              { href: "/flats", label: "Flats" },
+              { href: "/about", label: "About Us" },
+              { href: "/contact", label: "Contact" },
+            ].map((item) => (
+              <Link
+                key={item.label}
+                href={item.href}
+                className={`block px-3 py-2 rounded-md text-base font-medium transition-colors duration-300 ${pathname === item.href
+                  ? "bg-sky-100 dark:bg-sky-700 text-sky-700 dark:text-sky-300 font-semibold"
+                  : "text-slate-600 dark:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-700 hover:text-slate-900 dark:hover:text-white"
+                  }`}
+                onClick={() => setIsMenuOpen(false)}
+              >
+                {item.label}
+              </Link>
+            ))}
           </div>
-          <div className="pt-4 pb-3 border-t border-gray-200 dark:border-gray-700">
+          <div className="pt-4 pb-3 border-t border-gray-200 dark:border-slate-700">
             {user ? (
               <>
-                <div className="flex items-center px-4">
+                <div className="flex items-center px-5 mb-3">
                   {user.profilePicture ? (
                     <Image
-                      className="h-10 w-10 rounded-full"
+                      className="h-10 w-10 rounded-full object-cover"
                       src={user.profilePicture}
                       alt={user.name}
                       width={40}
                       height={40}
                     />
                   ) : (
-                    <div className="h-10 w-10 rounded-full bg-blue-500 flex items-center justify-center text-white">
+                    <div className="h-10 w-10 rounded-full bg-sky-500 dark:bg-sky-600 flex items-center justify-center text-white font-semibold text-lg">
                       {user.name.charAt(0).toUpperCase()}
                     </div>
                   )}
                   <div className="ml-3">
-                    <div className="text-base font-medium text-gray-800 dark:text-gray-200">{user.name}</div>
-                    <div className="text-sm font-medium text-gray-500 dark:text-gray-400">{user.email}</div>
+                    <div className="text-base font-semibold text-slate-800 dark:text-white">
+                      {user.name}
+                    </div>
+                    <div className="text-sm font-medium text-slate-500 dark:text-slate-400">
+                      {user.email}
+                    </div>
                   </div>
                 </div>
-                <div className="mt-3 space-y-1">
+                <div className="space-y-1 px-2">
                   {user.role === UserRole.ADMIN ? (
                     <Link
                       href="/admin"
-                      className="block px-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700"
+                      className="flex items-center px-3 py-2 rounded-md text-base font-medium text-slate-600 dark:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-700 hover:text-slate-900 dark:hover:text-white"
+                      onClick={() => setIsMenuOpen(false)}
                     >
-                      Admin Dashboard
+                      <FiSettings className="mr-3 h-5 w-5" /> Admin Dashboard
                     </Link>
                   ) : (
                     <Link
                       href="/dashboard"
-                      className="block px-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700"
+                      className="flex items-center px-3 py-2 rounded-md text-base font-medium text-slate-600 dark:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-700 hover:text-slate-900 dark:hover:text-white"
+                      onClick={() => setIsMenuOpen(false)}
                     >
-                      Dashboard
+                      <FiHome className="mr-3 h-5 w-5" /> Dashboard
                     </Link>
                   )}
                   <Link
                     href="/dashboard/profile"
-                    className="block px-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700"
+                    className="flex items-center px-3 py-2 rounded-md text-base font-medium text-slate-600 dark:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-700 hover:text-slate-900 dark:hover:text-white"
+                    onClick={() => setIsMenuOpen(false)}
                   >
-                    Profile
+                    <FiUser className="mr-3 h-5 w-5" /> Your Profile
                   </Link>
                   <button
                     type="button"
-                    onClick={logout}
-                    className="w-full text-left block px-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700"
+                    onClick={() => { logout(); setIsMenuOpen(false); }}
+                    className="flex items-center w-full text-left px-3 py-2 rounded-md text-base font-medium text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/30"
                   >
-                    Sign out
+                    <FiLogOut className="mr-3 h-5 w-5" /> Sign out
                   </button>
                 </div>
               </>
             ) : (
-              <div className="mt-3 space-y-1">
+              <div className="space-y-1 px-2">
                 <Link
                   href="/login"
-                  className="block px-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700"
+                  className="block px-3 py-2 rounded-md text-base font-medium text-slate-600 dark:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-700 hover:text-slate-900 dark:hover:text-white"
+                  onClick={() => setIsMenuOpen(false)}
                 >
                   Login
                 </Link>
                 <Link
                   href="/register"
-                  className="block px-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100 dark:text-gray-200 dark:hover:bg-gray-700"
+                  className="block px-3 py-2 rounded-md text-base font-medium bg-sky-600 text-white hover:bg-sky-700 dark:bg-sky-500 dark:hover:bg-sky-600"
+                  onClick={() => setIsMenuOpen(false)}
                 >
                   Register
                 </Link>

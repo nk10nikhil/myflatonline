@@ -24,13 +24,41 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                function getInitialTheme() {
+                  try {
+                    const storedTheme = localStorage.getItem('theme');
+                    if (storedTheme) {
+                      return storedTheme;
+                    }
+                    // Default to light theme if nothing is stored or preferred
+                    return 'light';
+                  } catch (e) {
+                    // localStorage might not be available
+                    return 'light';
+                  }
+                }
+                const theme = getInitialTheme();
+                if (theme === 'dark') {
+                  document.documentElement.classList.add('dark');
+                } else {
+                  // No need to explicitly remove for initial, as it won't be there
+                  // document.documentElement.classList.remove('dark');
+                }
+              })();
+            `,
+          }}
+        />
+      </head>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gray-50 dark:bg-slate-900 text-slate-900 dark:text-slate-50 transition-colors duration-300`}
       >
-        <AuthProvider>
-          {children}
-        </AuthProvider>
+        <AuthProvider>{children}</AuthProvider>
       </body>
     </html>
   );
