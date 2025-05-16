@@ -6,6 +6,7 @@ import axios from 'axios';
 import { useAuth } from '@/context/AuthContext';
 import { BHKType, PropertyType, FurnishingType, FacingDirection, WaterSupplyType, PreferredTenants, GenderPreference } from '@/models/Flat';
 import DashboardLayout from '@/components/DashboardLayout';
+import ImageUploader from '@/components/ImageUploader';
 
 const NewFlatPage = () => {
   const router = useRouter();
@@ -664,21 +665,17 @@ const NewFlatPage = () => {
           {/* Media Section */}
           <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-md">
             <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">Media</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="md:col-span-2">
-                <label className="block text-gray-700 dark:text-gray-300 mb-1">Images (URLs - comma separated)</label>
-                <input
-                  type="text"
-                  name="images"
-                  value={formData.images.join(',')}
-                  onChange={(e) => setFormData(prev => ({ ...prev, images: e.target.value.split(',').map(url => url.trim()) }))}
-                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 dark:bg-gray-800 dark:text-white"
-                  placeholder="https://example.com/image1.jpg, https://example.com/image2.jpg"
+            <div className="grid grid-cols-1 gap-4">
+              <div>
+                <label className="block text-gray-700 dark:text-gray-300 mb-1">Images*</label>
+                <ImageUploader
+                  images={formData.images}
+                  onChange={(images) => setFormData(prev => ({ ...prev, images }))}
+                  maxImages={5}
                 />
-                <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">Default placeholder image will be used if left empty</p>
               </div>
 
-              <div className="md:col-span-2">
+              <div>
                 <label className="block text-gray-700 dark:text-gray-300 mb-1">Video Link (YouTube or other)</label>
                 <input
                   type="text"
