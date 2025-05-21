@@ -99,13 +99,13 @@ const Footer = () => {
               <li className="flex items-start">
                 <FiHome className="h-5 w-5 text-sky-600 dark:text-sky-400 mr-3 mt-0.5 flex-shrink-0" />
                 <span className="text-slate-600 dark:text-slate-400">
-                  123 Main Street, Innovation Tower, Bangalore, KA 560001, India
+                  GCET, Greater Noida, India
                 </span>
               </li>
               <li className="flex items-center">
                 <FiPhone className="h-5 w-5 text-sky-600 dark:text-sky-400 mr-3 flex-shrink-0" />
-                <a href="tel:+919876543210" className="text-slate-600 hover:text-sky-600 dark:text-slate-400 dark:hover:text-sky-400 transition-colors duration-300">
-                  +91 98765 43210
+                <a href="tel:+919999999999" className="text-slate-600 hover:text-sky-600 dark:text-slate-400 dark:hover:text-sky-400 transition-colors duration-300">
+                  +91 99999 99999
                 </a>
               </li>
               <li className="flex items-center">
