@@ -36,13 +36,13 @@ export default function Home() {
       <Navbar />
 
       {/* Theme Toggle Button */}
-      <button
+      {/* <button
         onClick={toggleTheme}
         className="fixed top-20 right-4 z-50 p-2 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 shadow-md hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors duration-300"
         aria-label="Toggle theme"
       >
         {isDarkMode ? <FiSun className="h-6 w-6" /> : <FiMoon className="h-6 w-6" />}
-      </button>
+      </button> */}
 
       {/* Hero Section */}
       <section className="relative bg-gradient-to-br from-sky-500 via-indigo-600 to-purple-700 dark:from-slate-800 dark:via-slate-900 dark:to-black text-white py-24 md:py-32">

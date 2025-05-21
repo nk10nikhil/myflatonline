@@ -1,11 +1,11 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
-import { FiMenu, FiX, FiUser, FiLogOut, FiHome, FiSettings } from 'react-icons/fi';
+import { FiMenu, FiX, FiUser, FiLogOut, FiHome, FiSettings, FiSun, FiMoon } from 'react-icons/fi';
 import { UserRole } from '@/models/User';
 
 const Navbar = () => {
@@ -13,6 +13,31 @@ const Navbar = () => {
   const pathname = usePathname();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(false);
+
+  useEffect(() => {
+    const savedTheme = localStorage.getItem("theme");
+    if (savedTheme === "dark") {
+      setIsDarkMode(true);
+      document.documentElement.classList.add('dark');
+    } else {
+      setIsDarkMode(false);
+      document.documentElement.classList.remove('dark');
+    }
+  }, []);
+
+  const toggleTheme = () => {
+    const newDarkMode = !isDarkMode;
+    setIsDarkMode(newDarkMode);
+
+    if (newDarkMode) {
+      localStorage.setItem("theme", "dark");
+      document.documentElement.classList.add('dark');
+    } else {
+      localStorage.setItem("theme", "light");
+      document.documentElement.classList.remove('dark');
+    }
+  };
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -57,9 +82,18 @@ const Navbar = () => {
             ))}
           </div>
 
-          <div className="flex items-center">
+          <div className="flex items-center space-x-3">
+            {/* Theme Toggle Button - visible on desktop */}
+            <button
+              onClick={toggleTheme}
+              className="hidden sm:flex items-center justify-center p-2 rounded-full bg-gray-200 dark:bg-slate-700 text-gray-800 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-slate-600 transition-colors duration-300"
+              aria-label="Toggle theme"
+            >
+              {isDarkMode ? <FiSun className="h-5 w-5" /> : <FiMoon className="h-5 w-5" />}
+            </button>
+
             {user ? (
-              <div className="ml-4 relative">
+              <div className="relative">
                 <div>
                   <button
                     type="button"
@@ -134,7 +168,7 @@ const Navbar = () => {
                 )}
               </div>
             ) : (
-              <div className="hidden sm:flex items-center space-x-2 ml-4">
+              <div className="hidden sm:flex items-center space-x-2">
                 <Link
                   href="/login"
                   className="px-4 py-2 rounded-md text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-gray-100 dark:hover:bg-slate-700 hover:text-slate-900 dark:hover:text-white transition-colors duration-300"
@@ -150,7 +184,16 @@ const Navbar = () => {
               </div>
             )}
 
-            <div className="-mr-2 flex items-center sm:hidden ml-3">
+            <div className="-mr-2 flex items-center sm:hidden">
+              {/* Theme Toggle Button - visible on mobile */}
+              <button
+                onClick={toggleTheme}
+                className="p-2 rounded-full bg-gray-200 dark:bg-slate-700 text-gray-800 dark:text-gray-200 mr-2 hover:bg-gray-300 dark:hover:bg-slate-600 transition-colors duration-300"
+                aria-label="Toggle theme"
+              >
+                {isDarkMode ? <FiSun className="h-5 w-5" /> : <FiMoon className="h-5 w-5" />}
+              </button>
+
               <button
                 type="button"
                 onClick={toggleMenu}

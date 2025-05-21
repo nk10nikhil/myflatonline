@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import { FiUsers, FiTarget, FiHome, FiAward, FiSun, FiMoon } from "react-icons/fi";
+import { FiUsers, FiTarget, FiHome, FiAward } from "react-icons/fi";
 import { useState, useEffect } from "react";
 
 export default function About() {
@@ -19,30 +19,9 @@ export default function About() {
         }
     }, []);
 
-    useEffect(() => {
-        if (isDarkMode) {
-            localStorage.setItem("theme", "dark");
-        } else {
-            localStorage.setItem("theme", "light");
-        }
-    }, [isDarkMode]);
-
-    const toggleTheme = () => {
-        setIsDarkMode(!isDarkMode);
-    };
-
     return (
         <div className={`min-h-screen flex flex-col ${isDarkMode ? "dark" : ""} bg-gray-100 dark:bg-slate-900 transition-colors duration-300`}>
             <Navbar />
-
-            {/* Theme Toggle Button */}
-            <button
-                onClick={toggleTheme}
-                className="fixed top-20 right-4 z-50 p-2 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 shadow-md hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors duration-300"
-                aria-label="Toggle theme"
-            >
-                {isDarkMode ? <FiSun className="h-6 w-6" /> : <FiMoon className="h-6 w-6" />}
-            </button>
 
             {/* Header Section */}
             <section className="relative bg-gradient-to-br from-sky-500 via-indigo-600 to-purple-700 dark:from-slate-800 dark:via-slate-900 dark:to-black text-white py-24">
@@ -155,9 +134,9 @@ export default function About() {
 
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                         {[
-                            { name: "Rahul Gupta", role: "Founder & CEO", bio: "With over 15 years in real estate, Rahul leads MyFlat's vision and strategic direction." },
-                            { name: "Nikhil Kumar", role: "CTO", bio: "Tech innovator focused on creating seamless digital experiences for our users." },
-                            { name: "Arjun Kumar", role: "Head of Operations", bio: "Ensures smooth functioning of all platform processes and user satisfaction." },
+                            { name: "Rahul Sharma", role: "Founder & CEO", bio: "With over 15 years in real estate, Rahul leads MyFlat's vision and strategic direction." },
+                            { name: "Priya Patel", role: "CTO", bio: "Tech innovator focused on creating seamless digital experiences for our users." },
+                            { name: "Arjun Mehta", role: "Head of Operations", bio: "Ensures smooth functioning of all platform processes and user satisfaction." },
                         ].map((member, index) => (
                             <div key={index} className="bg-gray-100 dark:bg-slate-900 p-6 rounded-xl shadow-md hover:shadow-xl transition-all duration-300">
                                 <div className="bg-indigo-100 dark:bg-indigo-900/50 p-4 rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-6">

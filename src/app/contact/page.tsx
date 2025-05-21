@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useState, useEffect } from "react";
-import { FiSun, FiMoon, FiMapPin, FiPhone, FiMail, FiMessageSquare, FiChevronDown, FiChevronUp } from "react-icons/fi";
+import { FiMapPin, FiPhone, FiMail, FiMessageSquare, FiChevronDown, FiChevronUp } from "react-icons/fi";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
@@ -25,18 +25,6 @@ export default function Contact() {
             setIsDarkMode(false);
         }
     }, []);
-
-    useEffect(() => {
-        if (isDarkMode) {
-            localStorage.setItem("theme", "dark");
-        } else {
-            localStorage.setItem("theme", "light");
-        }
-    }, [isDarkMode]);
-
-    const toggleTheme = () => {
-        setIsDarkMode(!isDarkMode);
-    };
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -90,15 +78,6 @@ export default function Contact() {
     return (
         <div className={`min-h-screen flex flex-col ${isDarkMode ? "dark" : ""} bg-gray-100 dark:bg-slate-900 transition-colors duration-300`}>
             <Navbar />
-
-            {/* Theme Toggle Button */}
-            <button
-                onClick={toggleTheme}
-                className="fixed top-20 right-4 z-50 p-2 rounded-full bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 shadow-md hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors duration-300"
-                aria-label="Toggle theme"
-            >
-                {isDarkMode ? <FiSun className="h-6 w-6" /> : <FiMoon className="h-6 w-6" />}
-            </button>
 
             {/* Header Section */}
             <section className="relative bg-gradient-to-br from-sky-500 via-indigo-600 to-purple-700 dark:from-slate-800 dark:via-slate-900 dark:to-black text-white py-24">
@@ -227,8 +206,8 @@ export default function Contact() {
                                         <div className="ml-4">
                                             <h3 className="text-lg font-medium text-gray-900 dark:text-white">Our Office</h3>
                                             <p className="mt-1 text-gray-600 dark:text-gray-300">
-                                                GCET, Greater Noida<br />
-                                                201310<br />
+                                                123 Tech Park, Silicon Valley<br />
+                                                Bangalore, Karnataka 560001<br />
                                                 India
                                             </p>
                                         </div>
@@ -241,8 +220,8 @@ export default function Contact() {
                                         <div className="ml-4">
                                             <h3 className="text-lg font-medium text-gray-900 dark:text-white">Phone</h3>
                                             <p className="mt-1 text-gray-600 dark:text-gray-300">
-                                                Customer Support: +91 99999 99999<br />
-                                                Office: +91 99999 99999
+                                                Customer Support: +91 1800 123 4567<br />
+                                                Office: +91 80 2345 6789
                                             </p>
                                         </div>
                                     </div>
@@ -266,7 +245,12 @@ export default function Contact() {
                             {/* Map Placeholder */}
                             <div className="rounded-xl overflow-hidden shadow-lg h-64 bg-gray-200 dark:bg-gray-700 relative">
                                 {/* Placeholder for an actual map integration */}
-                                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3507.738221246939!2d77.49505052517348!3d28.457306675760847!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390cc1dc8b29c0e1%3A0x4ee84fe65c694f0!2sGALGOTIAS%20COLLEGE%20OF%20ENGINEERING%20AND%20TECHNOLOGY%2C%20Knowledge%20Park%20II%2C%20Greater%20Noida%2C%20Uttar%20Pradesh%20201310!5e0!3m2!1sen!2sin!4v1747799938082!5m2!1sen!2sin" width="600" height="450" loading="lazy"></iframe>
+                                <div className="absolute inset-0 flex items-center justify-center">
+                                    <p className="text-gray-600 dark:text-gray-300 text-center">
+                                        Map Integration<br />
+                                        <span className="text-sm">(Google Maps or other map service would be displayed here)</span>
+                                    </p>
+                                </div>
                             </div>
                         </div>
                     </div>
