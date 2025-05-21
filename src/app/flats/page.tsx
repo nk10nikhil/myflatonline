@@ -125,18 +125,20 @@ function FlatsContent() {
                 <button
                   onClick={() => setViewMode('grid')}
                   className={`p-2 rounded-md ${viewMode === 'grid'
-                      ? 'bg-blue-100 text-blue-600 dark:bg-blue-900 dark:text-blue-300'
-                      : 'bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-300'
+                    ? 'bg-blue-100 text-blue-600 dark:bg-blue-900 dark:text-blue-300'
+                    : 'bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-300'
                     }`}
+                  aria-label="Grid view"
                 >
                   <FiGrid className="h-5 w-5" />
                 </button>
                 <button
                   onClick={() => setViewMode('list')}
                   className={`p-2 rounded-md ${viewMode === 'list'
-                      ? 'bg-blue-100 text-blue-600 dark:bg-blue-900 dark:text-blue-300'
-                      : 'bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-300'
+                    ? 'bg-blue-100 text-blue-600 dark:bg-blue-900 dark:text-blue-300'
+                    : 'bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-300'
                     }`}
+                  aria-label="List view"
                 >
                   <FiList className="h-5 w-5" />
                 </button>
@@ -163,12 +165,12 @@ function FlatsContent() {
                 <div
                   className={
                     viewMode === 'grid'
-                      ? 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6'
-                      : 'space-y-6'
+                      ? 'grid grid-cols-2 xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-2 sm:gap-3'
+                      : 'space-y-1.5'
                   }
                 >
                   {flats.map((flat: any) => (
-                    <FlatCard key={flat._id} flat={flat} />
+                    <FlatCard key={flat._id} flat={flat} viewMode={viewMode} />
                   ))}
                 </div>
 
@@ -206,8 +208,8 @@ function FlatsContent() {
                               key={page}
                               onClick={() => handlePageChange(page)}
                               className={`px-3 py-1 rounded-md ${pagination.page === page
-                                  ? 'bg-blue-600 text-white'
-                                  : 'bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300'
+                                ? 'bg-blue-600 text-white'
+                                : 'bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300'
                                 }`}
                             >
                               {page}
